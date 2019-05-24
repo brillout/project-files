@@ -1,0 +1,15 @@
+{
+  "name": "@brillout/project-files",
+  "version": "0.1.0",
+  "main": "./ProjectFiles.js",
+  "dependencies": {
+    "@brillout/get-user-dir": "^0.2.3",
+    "@brillout/reassert": "^0.1.0",
+    "find-up": "^4.0.0",
+    "glob-gitignore": "^1.0.14",
+    "ignore": "^5.1.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
