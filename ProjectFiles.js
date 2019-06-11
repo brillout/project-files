@@ -6,11 +6,20 @@ function ProjectFiles({userDir, packageJsonIsOptional}={}) {
   const findProjectFiles_ = require('./findProjectFiles');
   const find_up = require('find-up');
 
+  let userScript;
   if( !userDir ){
-    const getUserDir = require('@brillout/get-user-dir');
-    assert.internal(getUserDir && getUserDir.constructor===Function, "cyclic dependency");
-    userDir = getUserDir();
-    assert.internal(userDir);
+    const getUserScript = require('./getUserScript');
+    assert.internal(getUserScript && getUserScript.constructor===Function, "cyclic dependency");
+    userScript = getUserScript();
+    assert.internal(userScript===null || userScript && path.isAbsolute(userScript), {userScript});
+    userDir = (
+      userScript ? (
+        path.dirname(userScript)
+      ) : (
+        process.cwd()
+      )
+    );
+    assert.internal(userDir && path.isAbsolute(userDir));
   }
 
   const packageJsonFile = find_up.sync('package.json', {cwd: userDir+'/'});
@@ -37,6 +46,8 @@ function ProjectFiles({userDir, packageJsonIsOptional}={}) {
   Object.assign(
     this,
     {
+      userDir,
+      userScript,
       packageJson,
       packageJsonFile,
       projectDir,
