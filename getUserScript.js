@@ -1,14 +1,14 @@
 const pathModule = require('path');
 const assert = require('@brillout/reassert');
 
+// We get the callstack now to make sure we don't get the callstack of an event loop
+const callstack = getV8StackTrace();
+
 /*
 const DEBUG = true;
 /*/
 const DEBUG = false;
 //*/
-
-// We get the callstack now to make sure we don't get the callstack of an event loop
-const callstack = getV8StackTrace();
 
 module.exports = getUserScript;
 
@@ -112,6 +112,7 @@ function isNotUserCode(filePath) {
 }
 function getFileProjectFiles(filePath) {
   const ProjectFiles = require('./ProjectFiles');
+  assert.internal(ProjectFiles && ProjectFiles.constructor===Function, "cyclic dependency");
 
   const fileDir = pathModule.dirname(filePath);
   const {packageJson, projectDir} = (
