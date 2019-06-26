@@ -1,6 +1,6 @@
 {
   "name": "@brillout/project-files",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "./ProjectFiles.js",
   "dependencies": {
     "@brillout/get-user-dir": "^0.2.3",

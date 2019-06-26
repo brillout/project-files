@@ -52,7 +52,7 @@ function ProjectFiles({userDir, packageJsonIsOptional}={}) {
       */
       projectDir,
       findFiles,
-      findFile,
+      findConfigFile,
       packageJson,
       packageJsonFile,
     }
@@ -65,26 +65,38 @@ function ProjectFiles({userDir, packageJsonIsOptional}={}) {
     return findProjectFiles(filename, {projectDir, ...opts})
   }
 
-  function findFile(...args) {
+  function findConfigFile(...args) {
     let files = findFiles(...args);
-    files = sortByPathDepth(files);
+
+    // Only consider files that are in a parent directory
+    // I.e. ignore files in sibling directories
+    files = (
+      files
+      .filter(file => isAncestorDirectory(path.dirname(file), userDir))
+    );
+
+    files = sotByDistance(files);
+
     file = files[0] || null;
     assert.internal(file===null || path.isAbsolute(file) && !isOutsideProject(file), {projectDir, file});
 
     return file;
 
-    function sortByPathDepth(files) {
+    function sotByDistance(files) {
       files = files.sort((file1, file2) => {
-        const distance1 = getDistanceToRoot(file1);
-        const distance2 = getDistanceToRoot(file2);
-        assert.internal(distance2.constructor===Number && distance2!==distance1);
+        const distance1 = getDistance(file1);
+        const distance2 = getDistance(file2);
+        assert.internal(distance2.constructor===Number && distance2!==distance1, {file1, file2});
         return distance1 - distance2;
       });
-      assert.internal(!files[0] || !files[1] || getDistanceToRoot(files[0])<getDistanceToRoot(files[1]));
+      assert.internal(!files[0] || !files[1] || getDistance(files[0])<getDistance(files[1]));
       return files;
     }
-    function getDistanceToRoot(file){
+    function getDistance(file){
       assert.internal(!isOutsideProject(file), {projectDir, file});
+      assert.internal(path.isAbsolute(file));
+      assert.internal(path.isAbsolute(userDir));
+      file = path.relative(userDir, file);
       return file.split(path.sep).length;
     }
   }
