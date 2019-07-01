@@ -3,7 +3,6 @@
   "version": "0.3.0",
   "main": "./ProjectFiles.js",
   "dependencies": {
-    "@brillout/get-user-dir": "^0.2.3",
     "@brillout/reassert": "^0.1.0",
     "callsites": "^2.0.0",
     "find-up": "^4.0.0",
