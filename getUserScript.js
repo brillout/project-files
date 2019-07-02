@@ -51,12 +51,12 @@ function getStackPaths() {
 }
 
 function getFileProjectFiles(filePath) {
-  const ProjectFiles = require('./ProjectFiles');
-  assert.internal(ProjectFiles && ProjectFiles.constructor===Function, "cyclic dependency");
+  const Project = require('./Project');
+  assert.internal(Project && Project.constructor===Function, "cyclic dependency");
 
   const fileDir = pathModule.dirname(filePath);
   const {packageJson, projectDir} = (
-    new ProjectFiles({
+    new Project({
       userDir: fileDir,
       packageJsonIsOptional: true,
     })
@@ -67,7 +67,7 @@ function getFileProjectFiles(filePath) {
 function isBinCall(filePath) {
   const {packageJson, projectDir} = getFileProjectFiles(filePath);
 
-  if( !packageJson.bin ){
+  if( !packageJson || !packageJson.bin ){
     return false;
   }
 

@@ -5,9 +5,9 @@ const find_up = require('find-up');
 const getUserScript = require('./getUserScript');
 assert.internal(getUserScript && getUserScript.constructor===Function, "cyclic dependency");
 
-module.exports = ProjectFiles;
+module.exports = Project;
 
-function ProjectFiles({userDir, packageJsonIsOptional}={}) {
+function Project({userDir, packageJsonIsOptional}={}) {
   let userScript;
   if( !userDir ){
     userScript = getUserScript();
@@ -30,12 +30,12 @@ function ProjectFiles({userDir, packageJsonIsOptional}={}) {
 
   let packageJson;
   try {
-    packageJson = require(packageJsonFile);
+    packageJson = eval('require')(packageJsonFile);
   } catch(err) {
     assert.usage(
       packageJsonIsOptional,
       err,
-      "Couldn't load `"+packageJsonFile+"`. See error above",
+      "Couldn't load `"+packageJsonFile+"`. See error above.",
     );
     packageJson = null;
   }
@@ -43,22 +43,15 @@ function ProjectFiles({userDir, packageJsonIsOptional}={}) {
 
   const projectDir = path.dirname(packageJsonFile);
 
-  Object.assign(
-    this,
-    {
-      /* `userDir` and `userScript` should be implementation details
-      userDir,
-      userScript,
-      */
-      projectDir,
-      findFiles,
-      findConfigFile,
-      packageJson,
-      packageJsonFile,
-    }
-  );
-
-  return this;
+  return {
+    userDir,
+    userScript,
+    projectDir,
+    findFiles,
+    findConfigFile,
+    packageJson,
+    packageJsonFile,
+  };
 
   function findFiles(filename, opts) {
     assert.internal(projectDir);
