@@ -15,7 +15,7 @@ function getUserScript() {
     for( let i = 0; i<callstack.length; i++ ){
       const filePath = callstack[i];
       if( isDependency(filePath) ){
-        continue;
+        break;
       }
       const is_bin_call = isBinCall(filePath);
       if(DEBUG) console.log('is bin call', filePath, is_bin_call);
