@@ -1,6 +1,6 @@
 {
   "name": "@brillout/project-files",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "./ProjectFiles.js",
   "dependencies": {
     "@brillout/reassert": "^0.1.0",

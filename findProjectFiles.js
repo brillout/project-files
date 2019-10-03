@@ -26,6 +26,7 @@ function findProjectFiles(filename, {projectDir, onlyDirectories, noDirectories,
         cwd: within,
         nodir: noDirectories, // doesn't seem to always work in `glob-gitignore` and `glob`
         ignore: get_ignore({cwd: within, ignoreSubProjects}),
+        follow: true, // Follow symlinked directories
     };
 
     const paths_found = (
