@@ -6,7 +6,7 @@ module.exports = { getUserScript, findProjectRoot };
 
 function getUserScript() {
   const userScripts = getUserScripts();
-  const userScript = userScripts.slice(-1)[0];
+  const userScript = userScripts.slice(-1)[0] || null;
   return userScript;
 }
 
