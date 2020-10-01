@@ -1,51 +1,28 @@
 const assert = require('@brillout/reassert');
 const path = require('path');
 const findProjectFiles = require('./findProjectFiles');
-const find_up = require('find-up');
-const getUserScript = require('./getUserScript');
-assert.internal(getUserScript && getUserScript.constructor===Function, "cyclic dependency");
+const {getUserScript, findProjectRoot} = require('./getUserScript');
 
 module.exports = Project;
 
-function Project({userDir, packageJsonIsOptional}={}) {
-  let userScript;
-  if( !userDir ){
-    userScript = getUserScript();
-    assert.internal(userScript===null || userScript && path.isAbsolute(userScript), {userScript});
-    userDir = (
-      userScript ? (
-        path.dirname(userScript)
-      ) : (
-        process.cwd()
-      )
-    );
-  }
+function Project() {
+  const userScript = getUserScript();
+
+  assert.internal(userScript===null || userScript && path.isAbsolute(userScript), {userScript});
+  const userDir = (
+    userScript ? (
+      path.dirname(userScript)
+    ) : (
+      process.cwd()
+    )
+  );
   assert.internal(userDir && path.isAbsolute(userDir));
 
-  const packageJsonFile = find_up.sync('package.json', {cwd: userDir+'/'});
-  assert.usage(
-    packageJsonFile || packageJsonIsOptional,
-    "Could not find package.json between `/` and `"+userDir+"`",
-  );
-
-  let packageJson;
-  try {
-    packageJson = eval('require')(packageJsonFile);
-  } catch(err) {
-    assert.usage(
-      packageJsonIsOptional,
-      err,
-      "Couldn't load `"+packageJsonFile+"`. See error above.",
-    );
-    packageJson = null;
-  }
+  const {packageJsonFile, packageJson, projectDir} = findProjectRoot(userDir);
   assert.internal(packageJson===null || packageJson.constructor===Object);
-
-  const projectDir = path.dirname(packageJsonFile);
 
   return {
     userDir,
-    userScript,
     projectDir,
     findFiles,
     findConfigFile,
