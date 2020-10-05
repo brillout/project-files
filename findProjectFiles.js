@@ -1,6 +1,7 @@
 const assert = require("@brillout/reassert");
 //const glob = require('glob');
 const ignore_module = require("ignore");
+// Alternative to glob-gitignore: https://github.com/sindresorhus/globby
 const glob_gitignore = require("glob-gitignore");
 const find_up_module = require("find-up");
 const path_module = require("path");
@@ -36,6 +37,7 @@ function findProjectFiles(
     /*
         glob.sync(glob_pattern, glob_options)
         /*/
+    // Alternative to glob-gitignore: https://github.com/sindresorhus/globby
     glob_gitignore
       .sync(glob_pattern, glob_options)
       //*/
