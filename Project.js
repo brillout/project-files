@@ -41,7 +41,7 @@ function Project() {
       isAncestorDirectory(path.dirname(file), userDir)
     );
 
-    files = sotByDistance(files);
+    files = sortByDistance(files);
 
     file = files[0] || null;
     assert.internal(
@@ -51,7 +51,7 @@ function Project() {
 
     return file;
 
-    function sotByDistance(files) {
+    function sortByDistance(files) {
       files = files.sort((file1, file2) => {
         const distance1 = getDistance(file1);
         const distance2 = getDistance(file2);
